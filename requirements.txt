@@ -1,0 +1,11 @@
+altgraph==0.17
+future==0.18.2
+pefile==2021.5.24
+psutil==5.8.0
+pyinstaller @ https://github.com/pyinstaller/pyinstaller/archive/develop.zip
+pyinstaller-hooks-contrib==2021.2
+pyodbc==4.0.31
+PySide2==5.15.2
+pywin32-ctypes==0.2.0
+shiboken2==5.15.2
+shiboken6==6.1.2
