@@ -436,7 +436,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider1">
+   <widget class="QSlider" name="temperature_slider">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -454,8 +454,14 @@
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksAbove</enum>
+    </property>
+    <property name="tickInterval">
+     <number>0</number>
+    </property>
    </widget>
-   <widget class="QSlider" name="horizontalSlider2">
+   <widget class="QSlider" name="humidity_slider">
     <property name="geometry">
      <rect>
       <x>570</x>
@@ -473,8 +479,11 @@
     <property name="orientation">
      <enum>Qt::Horizontal</enum>
     </property>
+    <property name="tickPosition">
+     <enum>QSlider::TicksAbove</enum>
+    </property>
    </widget>
-   <widget class="QDateEdit" name="dateEdit">
+   <widget class="QDateEdit" name="currentdate">
     <property name="geometry">
      <rect>
       <x>530</x>
@@ -499,6 +508,9 @@
       <day>31</day>
      </datetime>
     </property>
+    <property name="currentSection">
+     <enum>QDateTimeEdit::DaySection</enum>
+    </property>
     <property name="displayFormat">
      <string>yyyy/MM/dd</string>
     </property>
@@ -512,7 +524,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>500</x>
+      <x>520</x>
       <y>260</y>
       <width>40</width>
       <height>22</height>
@@ -544,7 +556,7 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>505</x>
+      <x>530</x>
       <y>300</y>
       <width>40</width>
       <height>22</height>
@@ -581,7 +593,7 @@
     </property>
     <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
-   <widget class="QLabel" name="label1">
+   <widget class="QLabel" name="temperature">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -589,7 +601,7 @@
      <rect>
       <x>470</x>
       <y>260</y>
-      <width>40</width>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -603,17 +615,20 @@
       <strikeout>false</strikeout>
      </font>
     </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
     <property name="text">
      <string>30</string>
     </property>
     <property name="textFormat">
-     <enum>Qt::RichText</enum>
+     <enum>Qt::PlainText</enum>
     </property>
     <property name="wordWrap">
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label2">
+   <widget class="QLabel" name="humidity">
     <property name="enabled">
      <bool>true</bool>
     </property>
@@ -621,7 +636,7 @@
      <rect>
       <x>470</x>
       <y>300</y>
-      <width>40</width>
+      <width>51</width>
       <height>22</height>
      </rect>
     </property>
@@ -645,7 +660,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="sample_name">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -664,7 +679,7 @@
      <string>岩粉样</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_2">
+   <widget class="QLineEdit" name="object_name">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -683,7 +698,7 @@
      <string>AU</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_dial">
+   <widget class="QLineEdit" name="wavelength">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -700,6 +715,9 @@
     </property>
     <property name="text">
      <string>242.8</string>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Normal</enum>
     </property>
    </widget>
    <widget class="QLineEdit" name="lineEdit_6">
@@ -721,7 +739,7 @@
      <string>ug/ml,r=</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_9">
+   <widget class="QLineEdit" name="num_control">
     <property name="geometry">
      <rect>
       <x>530</x>
@@ -740,7 +758,7 @@
      <string>Q/IMP-JCZXTZ-37</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton">
+   <widget class="QPushButton" name="report_pb">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -770,7 +788,7 @@
      <string>生成报表</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_2">
+   <widget class="QPushButton" name="save_pb">
     <property name="geometry">
      <rect>
       <x>190</x>
@@ -789,7 +807,7 @@
      <string>保存数据</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="close_pb">
     <property name="geometry">
      <rect>
       <x>630</x>
@@ -805,23 +823,29 @@
      </font>
     </property>
     <property name="text">
-     <string>取消</string>
+     <string>关闭窗口</string>
     </property>
    </widget>
-   <widget class="QDial" name="dial">
+   <widget class="QDial" name="wavelength_dial">
     <property name="geometry">
      <rect>
-      <x>310</x>
-      <y>240</y>
-      <width>50</width>
-      <height>64</height>
+      <x>320</x>
+      <y>230</y>
+      <width>61</width>
+      <height>81</height>
      </rect>
     </property>
     <property name="maximum">
      <number>5000</number>
     </property>
+    <property name="value">
+     <number>2428</number>
+    </property>
     <property name="wrapping">
      <bool>false</bool>
+    </property>
+    <property name="notchTarget">
+     <double>37.000000000000000</double>
     </property>
     <property name="notchesVisible">
      <bool>true</bool>
@@ -923,7 +947,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_method">
+   <widget class="QComboBox" name="method_combobox">
     <property name="geometry">
      <rect>
       <x>530</x>
@@ -942,7 +966,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QSpinBox" name="volumn">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -961,7 +985,7 @@
      <number>10</number>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="doubleSpinBox">
+   <widget class="QDoubleSpinBox" name="slit">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -986,7 +1010,7 @@
      <double>1.000000000000000</double>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox_type">
+   <widget class="QComboBox" name="type_combobox">
     <property name="geometry">
      <rect>
       <x>530</x>
