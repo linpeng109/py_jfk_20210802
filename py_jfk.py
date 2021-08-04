@@ -7,6 +7,7 @@ from PySide2.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBo
     QLabel, QSlider, QDateEdit, QSpinBox, QDoubleSpinBox, QPushButton
 
 from py_config import ConfigFactory
+from py_excel import ExcelHandle
 from py_logging import LoggerFactory
 
 
@@ -15,6 +16,7 @@ class JFK():
         self.config = config
         self.logger = logger
         self.get_data()
+        self.excel_handler = ExcelHandle(config=config, logger=logger)
 
     def get_data(self):
         # 数据表的表头
@@ -153,7 +155,7 @@ class JFK():
             'humidity': self.humidity.text()
         }
         list_data = []
-        list_data.append(self.data_header)
+        # list_data.append(self.data_header)
         rows = []
         for i in range(self.table_widget.rowCount()):
             cols = []
@@ -183,6 +185,8 @@ class JFK():
         meta_list, data_list = jfk.build_meta_data()
         self.logger.debug(meta_list)
         self.logger.debug(data_list)
+        self.excel_handler.replace_handler(replacement=meta_list)
+        self.excel_handler.inject_handler(data=data_list)
 
     # 处理保存
     def on_save(self):
