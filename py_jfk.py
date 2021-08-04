@@ -18,7 +18,7 @@ class JFK():
 
     def get_data(self):
         # 数据表的表头
-        self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/10-6', '分析结果\n ω(Au)/10-6',
+        self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/1e-6', '分析结果\n ω(Au)/1e-6',
                             '吸光度Abs', '备注']
         # 数据表
         self.data_list = [
