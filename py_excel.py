@@ -58,11 +58,25 @@ class ExcelHandle:
         self.logger.info('The output file is %s' % self.output)
 
     # excel文件定位写入处理
-    def rewrite_handler(self, dataframe):
-        # nrows = self.data_header
+    def inject_handler(self):
+        # 合并数据集合
+        data = []
+        data.append(self.data_header)
+        for row in self.data_list:
+            data.append(row)
+        self.logger.info(data)
 
+        # 创建新excel数据文件
+        new_workbook = xlwt.Workbook()
+        new_sheet = new_workbook.add_sheet('report')
 
-        pass
+        # 历遍数据并写入sheet
+        for i, row in enumerate(data):
+            for j, col in enumerate(row):
+                new_sheet.write(i + 10, j, data[i][j])
+
+        new_workbook.save(self.output)
+        self.logger.info('The output file is %s' % self.output)
 
 
 if __name__ == '__main__':
@@ -70,5 +84,6 @@ if __name__ == '__main__':
     config = ConfigFactory(config_file='py_jfk.ini').get_config()
     logger = LoggerFactory(config_factory=config).get_logger()
     excel_handle = ExcelHandle(config=config, logger=logger)
-    replacement = {'aa': 'aa123', 'bb': 'bb123', 'cc': 'cc12345'}
-    excel_handle.replace_handler(replacement)
+    excel_handle.inject_handler()
+    # replacement = {'aa': 'aa123', 'bb': 'bb123', 'cc': 'cc12345'}
+    # excel_handle.replace_handler(replacement)
