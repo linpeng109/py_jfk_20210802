@@ -12,7 +12,7 @@ class ConfigFactory(ConfigParser):
         return optionstr
 
     def set_config(self, section, option, value):
-        self.read(self.config, 'gbk')
+        self.read(self.config, 'utf8')
         self.set(section=section, option=option, value=value)
         with open(self.config, 'w') as config_file:
             self.write(config_file)
@@ -20,10 +20,5 @@ class ConfigFactory(ConfigParser):
     def get_config(self):
         # 在配置文件中使用变量调用
         self._interpolation = configparser.ExtendedInterpolation()
-        self.read(filenames=self.config, encoding='gbk')
+        self.read(filenames=self.config, encoding='utf8')
         return self
-
-
-if __name__ == '__main__':
-    cfg = ConfigFactory(config_file='py_metasploit.ini').get_config()
-    cfg.set_config(section='surpac', option='surpac_location', value='c:/system5')
