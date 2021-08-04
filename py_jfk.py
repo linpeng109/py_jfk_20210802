@@ -16,11 +16,11 @@ class JFK():
         self.get_data()
 
     def get_data(self):
-        # the solvent data ...
+        # 数据表的表头
         self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/10-6', '分析结果\n ω(Au)/10-6',
                             '吸光度Abs',
                             '备注']
-        # use numbers for numeric data to sort properly
+        # 数据表
         self.data_list = [
             ['1', '标样', 'SG102', '30', '', '', '', ''],
             ['2', '2020A-28055', 'SG101', '30', '', '', '', ''],
