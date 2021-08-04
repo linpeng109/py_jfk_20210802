@@ -1,5 +1,4 @@
 import sys
-
 from PySide2.QtCore import QFile
 from PySide2.QtGui import QFont
 from PySide2.QtUiTools import QUiLoader
