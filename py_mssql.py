@@ -4,8 +4,8 @@ driver = "SQL Server"
 server = "MSSQLSERVER01"
 database = "test1"
 connect_str = r'Driver=SQL Server;Server=.\MSSQLSERVER01;Database=test1;Trusted_Connection=yes;'
-# username = "DESKTOP-1F41P9S\linpeng109"
-# password = "stars2021"
+username = "DESKTOP-1F41P9S\linpeng109"
+password = "stars2021"
 rows = []
 with pyodbc.connect(connect_str) as conn:
     with conn.cursor() as cursor:

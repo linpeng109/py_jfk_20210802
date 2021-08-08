@@ -1,10 +1,11 @@
 import sys
+from array import array
 
 from PySide2.QtCore import QFile, QDate
 from PySide2.QtGui import QFont
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QDial, QLineEdit, QComboBox, \
-    QLabel, QSlider, QDateEdit, QSpinBox, QDoubleSpinBox, QPushButton
+    QLabel, QSlider, QDateEdit, QSpinBox, QDoubleSpinBox, QPushButton, QMessageBox
 
 from py_config import ConfigFactory
 from py_excel import ExcelHandle
@@ -20,8 +21,8 @@ class JFK():
 
     def get_data(self):
         # 数据表的表头
-        self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/1e-6', '分析结果\n ω(Au)/1e-6',
-                            '吸光度Abs', '备注']
+        # self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/1e-6', '分析结果\n ω(Au)/1e-6',
+        #                     '吸光度Abs', '备注']
         # 数据表
         self.data_list = [
             ['1', '标样', 'SG102', '30', '', '', '', ''],
@@ -154,7 +155,6 @@ class JFK():
             'temperature': self.temperature.text(),
             'humidity': self.humidity.text()
         }
-        list_data = []
         # list_data.append(self.data_header)
         rows = []
         for i in range(self.table_widget.rowCount()):
@@ -162,8 +162,7 @@ class JFK():
             for j in range(self.table_widget.columnCount()):
                 cols.append(self.table_widget.item(i, j).text())
             rows.append(cols)
-        list_data.append(rows)
-        return meta_data, list_data
+        return meta_data, rows
 
     # 处理dial数据
     def dial_value_handle(self):
@@ -182,11 +181,18 @@ class JFK():
 
     # 处理报表
     def on_report(self):
-        meta_list, data_list = jfk.build_meta_data()
-        self.logger.debug(meta_list)
-        self.logger.debug(data_list)
-        self.excel_handler.replace_handler(replacement=meta_list)
-        self.excel_handler.inject_handler(data=data_list)
+        try:
+            meta_list, data_list = jfk.build_meta_data()
+            self.logger.debug(meta_list)
+            self.logger.debug(data_list)
+            output_book, output_sheet = self.excel_handler.copyfile_handler()
+            output_book, output_sheet = self.excel_handler.replace_handler(new_workbook=output_book,
+                                                                           new_worksheet=output_sheet,
+                                                                           replacement=meta_list)
+            self.excel_handler.inject_handler(output_book, output_sheet, data=data_list)
+        except PermissionError as error:
+            print(error)
+            QMessageBox.question(self.ui, '操作提示', '目标文件正在被另一程序编辑，请关闭文件后重新操作！', QMessageBox.Ok)
 
     # 处理保存
     def on_save(self):
@@ -196,7 +202,9 @@ class JFK():
 
     # 处理关闭
     def on_close(self):
-        pass
+        replay = QMessageBox.question(self.ui, '操作提示', '是否退出程序？', QMessageBox.Yes | QMessageBox.No)
+        if replay == QMessageBox.Yes:
+            self.ui.close()
 
 
 if __name__ == '__main__':
