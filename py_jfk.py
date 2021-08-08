@@ -1,46 +1,54 @@
 import sys
-from array import array
 
 from PySide2.QtCore import QFile, QDate
 from PySide2.QtGui import QFont
 from PySide2.QtUiTools import QUiLoader
 from PySide2.QtWidgets import QApplication, QTableWidget, QTableWidgetItem, QVBoxLayout, QDial, QLineEdit, QComboBox, \
-    QLabel, QSlider, QDateEdit, QSpinBox, QDoubleSpinBox, QPushButton, QMessageBox
+    QLabel, QSlider, QDateEdit, QSpinBox, QDoubleSpinBox, QPushButton, QMessageBox, QMainWindow
 
 from py_config import ConfigFactory
 from py_excel import ExcelHandle
 from py_logging import LoggerFactory
 
 
-class JFK():
-    def __init__(self, config, logger):
+class JFK(QMainWindow):
+    def __init__(self, config, logger, ui_filename):
+        super(JFK, self).__init__()
         self.config = config
         self.logger = logger
         self.get_data()
         self.excel_handler = ExcelHandle(config=config, logger=logger)
+        self.ui = self.load_ui(ui_filename)
+        self.ui.show()
+
+    # 处理关闭
+    def closeEvent(self, event):
+        replay = QMessageBox.question(self.ui, '操作提示', '是否退出程序？', QMessageBox.Yes | QMessageBox.No)
+        if replay == QMessageBox.Yes:
+            self.ui.close()
 
     def get_data(self):
         # 数据表的表头
-        # self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/1e-6', '分析结果\n ω(Au)/1e-6',
-        #                     '吸光度Abs', '备注']
+        self.data_header = ['序号', '统一编号', '原始编号', '取样量 (g/ml)', '分析结果\n ω(Au)/1e-6', '分析结果\n ω(Au)/1e-6',
+                            '吸光度Abs', '备注']
         # 数据表
         self.data_list = [
-            ['1', '标样', 'SG102', '30', '', '', '', ''],
-            ['2', '2020A-28055', 'SG101', '30', '', '', '', ''],
-            ['3', '2020A-28056', 'SG102', '30', '', '', '', ''],
-            ['4', '2020A-28057', 'SG103', '30', '', '', '', ''],
-            ['5', '2020A-28058', 'SG104', '30', '', '', '', ''],
-            ['6', '2020A-28059', 'SG105', '30', '', '', '', ''],
-            ['7', '2020A-28060', 'SG106', '30', '', '', '', ''],
-            ['8', '2020A-28060', 'SG107', '30', '', '', '', ''],
-            ['9', '2020A-28060', 'SG108', '30', '', '', '', ''],
-            ['10', '2020A-28061', 'SG109', '30', '', '', '', ''],
-            ['11', '2020A-28062', 'SG110', '30', '', '', '', ''],
-            ['12', '2020A-28063', 'SG111', '30', '', '', '', ''],
+            ['1', '标样', 'SG102', '30g', '', '', '', ''],
+            ['2', '2020A-28055', 'SG101', '30g', '', '', '', ''],
+            ['3', '2020A-28056', 'SG102', '30g', '', '', '', ''],
+            ['4', '2020A-28057', 'SG103', '30g', '', '', '', ''],
+            ['5', '2020A-28058', 'SG104', '30g', '', '', '', ''],
+            ['6', '2020A-28059', 'SG105', '30g', '', '', '', ''],
+            ['7', '2020A-28060', 'SG106', '30g', '', '', '', ''],
+            ['8', '2020A-28060', 'SG107', '30g', '', '', '', ''],
+            ['9', '2020A-28060', 'SG108', '30g', '', '', '', ''],
+            ['10', '2020A-28061', 'SG109', '30g', '', '', '', ''],
+            ['11', '2020A-28062', 'SG110', '30g', '', '', '', ''],
+            ['12', '2020A-28063', 'SG111', '30g', '', '', '', ''],
         ]
 
-        self.method_data = ['GB/T20899.1-2020', 'GB/T20899.2-2020', 'GB/T20899.3-2020']
-        self.type_data = ['TAS-990F', 'TAS-991F', 'TAS-992F', 'TAS-993F']
+        self.method_data = self.config.get('data', 'method_data').split(';')
+        self.type_data = self.config.get('data', 'type_data').split(';')
 
     def load_ui(self, uifilename):
         loader = QUiLoader()
@@ -133,7 +141,7 @@ class JFK():
 
         # 获取关闭按钮
         self.close_pb = self.ui.findChild(QPushButton, 'close_pb')
-        self.close_pb.clicked.connect(self.on_close)
+        self.close_pb.clicked.connect(self.closeEvent)
 
         # 关闭ui文件
         uifile.close()
@@ -200,19 +208,13 @@ class JFK():
         print(meta_list)
         print(data_list)
 
-    # 处理关闭
-    def on_close(self):
-        replay = QMessageBox.question(self.ui, '操作提示', '是否退出程序？', QMessageBox.Yes | QMessageBox.No)
-        if replay == QMessageBox.Yes:
-            self.ui.close()
-
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     # 设置配置文件和日志
     config = ConfigFactory(config_file='py_jfk.ini').get_config()
     logger = LoggerFactory(config_factory=config).get_logger()
-    jfk = JFK(config=config, logger=logger)
-    mainWindow = jfk.load_ui('py_jfk.ui')
-    mainWindow.show()
+    #  初始化窗口
+    jfk = JFK(config=config, logger=logger, ui_filename='py_jfk.ui')
+
     sys.exit(app.exec_())
